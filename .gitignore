@@ -1,0 +1,30 @@
+# Ignore virtual environment
+venv/
+
+# Ignore IDE settings
+.idea
+
+# Ignore Python compiled files
+*.pyc
+__pycache__/
+
+# Ignore media and static files
+/media/
+/static/
+
+# Ignore Django secret key and environment variables
+.env
+
+# Ignore SQLite database in database directory
+db.*
+
+# Ignore certificate files
+cert.*
+
+# Ignore logs
+/logs/
+*.log
+
+# Ignore .DS_Store
+*/.DS_Store
+.DS_Store
