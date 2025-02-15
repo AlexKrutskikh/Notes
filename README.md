@@ -17,8 +17,8 @@
 
 ### 🐳 Запуск проекта в Docker
 ```bash
-   git clone https://github.com/AlexKrutskikh/FreeVetbackend.git
-   cd FreeVetbackend
+   git clone https://github.com/AlexKrutskikh/Notes
+   cd Notes
    docker-compose up -d
   ```
 ### В процессе сборки запускаются три контейнера:
@@ -34,8 +34,8 @@
 
 ### 🖥️ Локальный запуск
 ```bash
-   git clone https://github.com/AlexKrutskikh/FreeVetbackend.git
-   cd FreeVetbackend
+   git clone https://github.com/AlexKrutskikh/Notes
+   cd Notes
    python main.py
   ```
 #### Обновите переменные окружения в файле .env: 

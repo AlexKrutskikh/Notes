@@ -28,3 +28,8 @@ cert.*
 # Ignore .DS_Store
 */.DS_Store
 .DS_Store
+
+# lint
+Makefile
+pyproject.toml
+requirements-dev.txt
