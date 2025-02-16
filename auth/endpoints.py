@@ -107,24 +107,34 @@ async def refresh(refresh_payload: TokenPayload = Depends(security.refresh_token
 @router.post("/v1/users/change-role", operation_id="change_user_role")
 async def change_user_role(data: ChangeRoleSchema):
     try:
-        user_id = ObjectId(data.user_id)
-    except Exception:
+        user_id = ObjectId(data.user_id)  # Преобразуем строку в ObjectId
+    except Exception as e:
+        logger.error(f"Ошибка преобразования ID: {data.user_id}, ошибка: {e}")
         raise HTTPException(status_code=400, detail="Неверный формат ID")
 
     user = await users_collection.find_one({"_id": user_id})
 
     if not user:
+        logger.warning(f"Пользователь с ID {data.user_id} не найден.")
         raise HTTPException(status_code=404, detail="Пользователь не найден")
 
     if data.secret_key != KEY_ROLE:
+        logger.warning(f"Неверный секретный ключ для пользователя {data.user_id}")
         raise HTTPException(status_code=403, detail="Неверный секретный ключ")
 
     if data.role not in ["User", "Admin"]:
+        logger.warning(f"Неверная роль: {data.role} для пользователя {data.user_id}")
         raise HTTPException(status_code=400, detail="Неверная роль. Доступны только 'User' и 'Admin'")
 
-    await users_collection.update_one(
-        {"user_id": data.user_id}, {"$set": {"role": data.role, "last_login": datetime.now()}}
+    result = await users_collection.update_one(
+        {"_id": user_id}, {"$set": {"role": data.role, "last_login": datetime.now()}}
     )
+
+    if result.matched_count == 0:
+        logger.error(f"Не удалось обновить роль пользователя {data.user_id}. Возможно, пользователь не существует.")
+        raise HTTPException(status_code=500, detail="Не удалось обновить роль пользователя")
+
+    logger.info(f"Роль пользователя {data.user_id} изменена на {data.role}")
 
     response = JSONResponse(
         content={"success": True, "message": f"Роль пользователя {data.user_id} изменена на {data.role}"}
