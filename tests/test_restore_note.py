@@ -6,7 +6,7 @@ from httpx import AsyncClient
 from auth.tokens import generate_fake_token
 from main import app
 
-"""Тест для восстанволения заметки"""
+"""Тест для восстановления заметки"""
 
 
 @pytest.mark.asyncio
