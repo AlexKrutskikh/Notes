@@ -28,6 +28,7 @@ verification_codes_collection = mongo_db["verification_codes"]
 notes_collection = mongo_db["notes"]
 basket_collection = mongo_db["basket"]
 
+
 # Конфигурация AuthX
 config_AuthX = AuthXConfig()
 config_AuthX.JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")

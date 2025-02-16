@@ -23,3 +23,17 @@ def generate_and_set_tokens(user, response: Response) -> Response:
     response.set_cookie(key="refresh_token", value=refresh_token, httponly=True, max_age=timedelta(days=7))
 
     return response
+
+
+"""Генерирует фейкового токена для теста"""
+
+
+def generate_fake_token(user_id):
+
+    access_token = security.create_access_token(subject=user_id, expires_in=timedelta(hours=10), uid=user_id)
+
+    refresh_token = security.create_refresh_token(
+        subject=user_id, expires_in=datetime.now() + timedelta(days=7), uid=user_id
+    )
+
+    return {"access_token": access_token, "refresh_token": refresh_token}

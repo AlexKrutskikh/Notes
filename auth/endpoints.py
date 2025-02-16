@@ -51,6 +51,8 @@ async def verify_code(data: VerifyCodeSchema):
         raise HTTPException(status_code=400, detail="Код не найден")
 
     if verification["code"] != data.code:
+        print(data.code)
+        print(verification["code"])
         logger.warning(f"Неверный код для {data.email}. Введенный код: {data.code}")
         raise HTTPException(status_code=400, detail="Неверный код")
 

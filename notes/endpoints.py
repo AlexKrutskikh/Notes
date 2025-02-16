@@ -72,9 +72,11 @@ async def delete_note(data: NoteSchema, payload: TokenPayload = Depends(security
             raise HTTPException(status_code=404, detail="Заметка не найдена")
 
         if note["user_id"] != payload.sub:
+
             raise HTTPException(status_code=403, detail="Нет доступа к этой заметке")
 
         if role != "User":
+
             raise HTTPException(
                 status_code=403, detail="Перемещение в корзину доступно только пользователям с ролью 'User'"
             )
@@ -89,6 +91,7 @@ async def delete_note(data: NoteSchema, payload: TokenPayload = Depends(security
         return JSONResponse(content={"success": True, "message": "Заметка перемещена в корзину"}, status_code=200)
 
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=400, detail=f"Ошибка: {str(e)}")
 
 
@@ -178,4 +181,5 @@ async def restore_note(data: NoteSchema, payload: TokenPayload = Depends(securit
         return JSONResponse(content={"success": True, "message": "Заметка успешно восстановлена"}, status_code=200)
 
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=400, detail=f"Ошибка: {str(e)}")
