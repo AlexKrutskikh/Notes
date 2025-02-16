@@ -7,9 +7,11 @@ from fastapi import Depends, HTTPException, Response
 from fastapi.responses import JSONResponse
 
 from auth.models import UserModel, VerifyCode
-from auth.schemes import RequestCodeSchema, VerifyCodeSchema
+from auth.schemes import ChangeRoleSchema, RequestCodeSchema, VerifyCodeSchema
 from auth.tokens import generate_and_set_tokens
+from auth.utils import send_verification_code
 from settings import (
+    KEY_ROLE,
     logger,
     router,
     security,
@@ -27,7 +29,7 @@ async def request_code(data: RequestCodeSchema):
     try:
         verification_code = VerifyCode(email=data.email, code=code, created_at=datetime.now())
         await verification_codes_collection.insert_one(verification_code.model_dump())
-        # await send_verification_code(data.email, code)
+        await send_verification_code(data.email, code)
 
         logger.info(f"Код подтверждения отправлен на {data.email}. Код: {code}")
 
@@ -98,3 +100,31 @@ async def refresh(refresh_payload: TokenPayload = Depends(security.refresh_token
     logger.info(f"Токен обновлен для пользователя: {refresh_payload.sub}")
 
     return generate_and_set_tokens(user, response)
+
+
+@router.post("/v1/users/change-role", operation_id="change_user_role")
+async def change_user_role(data: ChangeRoleSchema):
+    try:
+        user_id = ObjectId(data.user_id)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Неверный формат ID")
+
+    user = await users_collection.find_one({"_id": user_id})
+
+    if not user:
+        raise HTTPException(status_code=404, detail="Пользователь не найден")
+
+    if data.secret_key != KEY_ROLE:
+        raise HTTPException(status_code=403, detail="Неверный секретный ключ")
+
+    if data.role not in ["User", "Admin"]:
+        raise HTTPException(status_code=400, detail="Неверная роль. Доступны только 'User' и 'Admin'")
+
+    await users_collection.update_one(
+        {"user_id": data.user_id}, {"$set": {"role": data.role, "last_login": datetime.now()}}
+    )
+
+    response = JSONResponse(
+        content={"success": True, "message": f"Роль пользователя {data.user_id} изменена на {data.role}"}
+    )
+    return response

@@ -50,3 +50,6 @@ cons_handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)
 logger.addHandler(cons_handler)
 logger.addHandler(file_handler)
+
+# Ключ для смены роли
+KEY_ROLE = os.getenv("KEY_ROLE")
