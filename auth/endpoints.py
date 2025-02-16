@@ -13,7 +13,9 @@ from auth.utils import send_verification_code
 from settings import (
     KEY_ROLE,
     logger,
-    router,
+)
+from settings import router_note as router
+from settings import (
     security,
     users_collection,
     verification_codes_collection,

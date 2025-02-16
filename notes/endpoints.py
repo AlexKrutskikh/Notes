@@ -8,7 +8,9 @@ from fastapi.responses import JSONResponse
 from notes.models import Notes
 from notes.schemes import NoteSchema
 from notes.utils import serialize_data
-from settings import basket_collection, logger, notes_collection, router, security
+from settings import basket_collection, logger, notes_collection
+from settings import router_auth as router
+from settings import security
 
 """Создание новой заметки"""
 

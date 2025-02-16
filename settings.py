@@ -6,7 +6,8 @@ from dotenv import load_dotenv
 from fastapi import APIRouter
 from motor.motor_asyncio import AsyncIOMotorClient
 
-router = APIRouter()
+router_auth = APIRouter()
+router_note = APIRouter()
 
 load_dotenv()
 

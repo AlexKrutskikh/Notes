@@ -19,13 +19,12 @@ app = FastAPI(
 - 🐳 **Готовый Dockerfile** и `docker-compose.yml`  
 - ⚙️ **Pytest** для тестирования эндпоинтов  
 """,
-    version="1.0.0"
+    version="1.0.0",
 )
 
 
-app.include_router(auth_router, prefix="/auth", tags=["Auth🔑"])
-app.include_router(notes_router, prefix="/notes", tags=["Notes📝"])
-
+app.include_router(auth_router, tags=["Auth🔑"])
+app.include_router(notes_router, tags=["Notes📝"])
 
 
 if __name__ == "__main__":
